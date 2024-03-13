@@ -1,2 +1,8 @@
 # NoSQLHomework
-A backend for an ecommerce site.
+A backend for a social media website.
+
+## Technologies Used
+- Node.js
+- Express.js
+- MongoDB
+- Mongoose
