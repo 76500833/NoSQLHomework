@@ -1,5 +1,5 @@
 const router = require('express').Router();
-const { User, Thought } = require('../../models');
+const { User, Thought } = require('../models/model');
 
 router.get('/api/users', (req, res) => {
   User.find({})
@@ -53,4 +53,30 @@ router.delete('/api/users/:id', (req, res) => {
     .catch(err => res.status(400).json(err));
 });
 
+router.post('/api/thoughts', (req, res) => {
+  Thought.create(req.body)
+    .then(({ _id, username }) => {
+      return User.findOneAndUpdate(
+        { username },
+        { $push: { thoughts: _id } },
+        { new: true }
+      );
+    })
+    .then(dbUserData => res.json(dbUserData))
+    .catch(err => res.status(400).json(err));
+});
+
+//route to get all thoughts
+router.get('/api/thoughts', (req, res) => {
+  Thought.find({})
+    .then(dbThoughtData => res.json(dbThoughtData))
+    .catch(err => res.status(400).json(err));
+});
+
+//get a specific users thoughts
+router.get('/api/users/:username/thoughts', (req, res) => {
+  Thought.find({ username: req.params.username })
+    .then(dbThoughtData => res.json(dbThoughtData))
+    .catch(err => res.status(400).json(err));
+});
 module.exports = router;
